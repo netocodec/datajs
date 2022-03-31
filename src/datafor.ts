@@ -34,6 +34,7 @@ export class DataFor{
 	private readonly RAW_FIELD:RegExp = /`/g;
 	private readonly RAW_FIELD_STR:string = "`";
 	private readonly PROTOCOL:string = "://";
+	private readonly SEARCH_ELEMENTS:string = '[data-for-subid][data-for-id]';
 
 	private refreshTimer:any = null;
 
@@ -73,16 +74,18 @@ export class DataFor{
 	}
 
 	public construct_result(element_tagname:string, data:any[], fields:string[], element:HTMLElement){
-		for(let data_id=0;data_id<data.length;data_id++){
+		for(let data_id:number=0;data_id<data.length;data_id++){
 			let data_item:object = data[data_id];
+			let data_sub_id:string = data_id.toString();
 
-			for(let field_id=0;field_id<fields.length;field_id++){
+			for(let field_id:number=0;field_id<fields.length;field_id++){
 				let field_element:HTMLElement = document.createElement(element_tagname);
 				let field:string = fields[field_id];
 				let field_id_str:string = field_id.toString();
-				let query_string:string = '[data-id="'+field_id_str+'"]';
+				let query_string:string = '[data-for-subid="'+data_sub_id+'"][data-for-id="'+field_id_str+'"]';
 
-				field_element.dataset.id = field_id_str;
+				field_element.dataset.forId = field_id_str;
+				field_element.dataset.forSubid = data_sub_id;
 				if(element.querySelector(query_string)){
 					field_element = element.querySelector(query_string);
 				}
@@ -94,6 +97,23 @@ export class DataFor{
 				}
 
 				element.appendChild(field_element);
+			}
+		}
+
+		this.clean_up_unwanted_result(data.length, fields.length, element);
+	}
+
+	public clean_up_unwanted_result(total_data:number, total_fields:number, element:HTMLElement){
+		let elements_to_clean:NodeListOf<HTMLElement> = element.querySelectorAll(this.SEARCH_ELEMENTS);
+
+		for(let d:number=total_data;d<elements_to_clean.length;d++){
+			for(let f:number=0;f<total_fields;f++){
+				let query_string:string = '[data-for-subid="'+d+'"][data-for-id="'+f+'"]';
+				let target_element:HTMLElement = element.querySelector(query_string);
+
+				if(target_element){
+					target_element.remove();
+				}
 			}
 		}
 	}
