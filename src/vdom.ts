@@ -9,6 +9,7 @@ export class VDOM {
 	public static dom_list:DOMItem[] = [];
 
 	public static add_element(element: DOMItem){
+		console.log(`add_element::${element.id}`);
 		VDOM.dom_list.push(element);
 	}
 

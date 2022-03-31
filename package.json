@@ -6,7 +6,7 @@
 	"scripts": {
 		"serve": "node ./local_server.js",
 		"build": "npx webpack build --config ./webpack.config.js --mode=production",
-		"build-dev": "npx webpack build --config ./webpack.config.development.js --mode=development"
+		"build-dev": "npx webpack build --config ./webpack.config.development.js --mode=development && npm run serve"
 	},
 	"repository": {
 		"type": "git",

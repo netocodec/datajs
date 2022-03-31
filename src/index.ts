@@ -1,6 +1,10 @@
 import {DataFor} from './datafor';
 import {VDOM} from './vdom';
 
+declare global {
+	interface Window { DataJS: any; }
+}
+
 class DataJS {
 
 	constructor(){
@@ -8,7 +12,7 @@ class DataJS {
 
 		const data_for_elements:NodeListOf<HTMLElement> = document.querySelectorAll('[data-for]');
 
-		for(let elem_id:number;elem_id<data_for_elements.length;elem_id++){
+		for(let elem_id:number=0;elem_id<data_for_elements.length;elem_id++){
 			let element:HTMLElement=data_for_elements[elem_id];
 			let data_element:DataFor = new DataFor(element);
 
@@ -19,6 +23,10 @@ class DataJS {
 				element_class: data_element
 			});
 		}
+
+		setInterval(function(){
+			console.log(VDOM.dom_list);
+		}, 10000);
 	}
 
 
@@ -28,4 +36,4 @@ class DataJS {
 	}
 }
 
-
+window.DataJS = DataJS;
