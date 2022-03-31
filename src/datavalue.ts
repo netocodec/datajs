@@ -33,7 +33,7 @@ import {Global} from './global';
  *	
  *	For data-value works properly withJSON structure
  */
-class DataValue{
+export class DataValue{
 	constructor(element:HTMLElement) {
 		let self:any = this;
 		let element_dataset:any = element.dataset;

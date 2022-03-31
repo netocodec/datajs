@@ -8,7 +8,7 @@
 		"noImplicitAny":false
 	},
 	"typedocOptions": {
-		"entryPoints": ["src/datafor.ts"],
+		"entryPoints": ["src/datafor.ts", "src/datavalue.ts"],
 		"out": "docs"
 	}
 }
