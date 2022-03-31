@@ -1,8 +1,8 @@
-import {Global} from './global';
+import {Global, FieldValueResult} from './global';
 import {Network} from './net';
 
 /**
- * Data For Class
+ * Data For Class - This is similar has a loop for to present the result on HTML code.
  *
  * ```HTML
  * 
@@ -11,7 +11,8 @@ import {Network} from './net';
  * 		data-request-url="URI"
  * 		data-request-method="METHOD_TYPE"
  * 		data-request-params='{ "FIELD_NAME": "FIELD_VALUE" }'
- * 		data-request-refresh="TIME_IN_SECONDS"></TAGNAME>
+ * 		data-request-refresh="TIME_IN_SECONDS"
+ *		data-request-value="FIELD_NAME"></TAGNAME>
  * ```
  *	data-for --> Required
  *	data-fields --> Required
@@ -19,10 +20,18 @@ import {Network} from './net';
  *	data-request-method --> Required
  *	data-request-params --> Required only on POST method
  *	data-request-refresh --> Optional
+ *	data-request-value --> Optional
  *
+ *	The field "data-request-value" is used to tell the code where is the real result.
  *
-	On data-request-params attribute if you want use the date in real time you can use this "time": "DATE_NOW"
-   and the DataJS will put on the request the current HOUR:MINUTE payload.
+ *	Example:
+ *		Result of the request is: {  result: [ "hello", "world", "123"] }
+ *
+ *		But your result on HTML is : [object] Object.
+ *		You use the attiribute "data-request-value='result'" and then you have the result in the HTML "helloworld123"
+ *
+ *	On data-request-params attribute if you want use the date in real time you can use this "time": "DATE_NOW"
+ *  and the DataJS will put on the request the current HOUR:MINUTE payload.
  *
  *	On data-fields you can explore the data structure object. For example "propertyname.insideproperty.array[0].valueproperty"
  *	
@@ -44,11 +53,11 @@ export class DataFor{
 		let element_tagname:string = element.tagName.toLowerCase();
 		let element_dataset:any = element.dataset;
 
-
-		let fields:string[] = element_dataset.fields.split(this.FIELD_SEPARATOR);
+		let fields:string = element_dataset.fields;
 		let requestMethod:string = element_dataset.requestMethod;
 		let requestParams:string = element_dataset.requestParams;
 		let requestRefresh:string = element_dataset.requestRefresh;
+		let requestValue:string = element_dataset.requestValue;
 		let url:string = element_dataset.requestUrl;
 
 		if(url.indexOf(this.PROTOCOL) === -1){
@@ -56,11 +65,16 @@ export class DataFor{
 		}else{
 			let refresh:any = () => {
 				new Network(url, requestMethod, requestParams, true).call((_, data_json)=>{
-					self.construct_result(element_tagname, data_json, fields, element);
+					let request_result:any = data_json;
+
+					if(requestValue){
+						request_result = Global.getStringProperty(data_json, requestValue);
+					}
+
+					self.construct_result(element_tagname, request_result, fields, element);
 				}, (_)=>{
 					self.construct_result(element_tagname, [], fields, element);
 				});	
-
 			};
 
 			if(requestRefresh){
@@ -73,14 +87,15 @@ export class DataFor{
 		}
 	}
 
-	public construct_result(element_tagname:string, data:any[], fields:string[], element:HTMLElement){
+	public construct_result(element_tagname:string, data:any[], field:string, element:HTMLElement){
 		for(let data_id:number=0;data_id<data.length;data_id++){
 			let data_item:object = data[data_id];
 			let data_sub_id:string = data_id.toString();
+			let fields:FieldValueResult = Global.createStringValue(field, data_item);
 
-			for(let field_id:number=0;field_id<fields.length;field_id++){
+			for(let field_id:number=0;field_id<fields.fields_list.length;field_id++){
 				let field_element:HTMLElement = document.createElement(element_tagname);
-				let field:string = fields[field_id];
+				let field:string = fields.fields_list[field_id];
 				let field_id_str:string = field_id.toString();
 				let query_string:string = '[data-for-subid="'+data_sub_id+'"][data-for-id="'+field_id_str+'"]';
 
@@ -89,18 +104,13 @@ export class DataFor{
 				if(element.querySelector(query_string)){
 					field_element = element.querySelector(query_string);
 				}
-
-				if(field.indexOf(this.RAW_FIELD_STR)!==-1){
-					field_element.innerHTML = field.replace(this.RAW_FIELD, '');
-				}else{
-					field_element.innerHTML = Global.getStringProperty(data_item, field);
-				}
+				field_element.innerHTML = field;
 
 				element.appendChild(field_element);
 			}
 		}
 
-		this.clean_up_unwanted_result(data.length, fields.length, element);
+		this.clean_up_unwanted_result(data.length, Global.getFieldsLength(field), element);
 	}
 
 	public clean_up_unwanted_result(total_data:number, total_fields:number, element:HTMLElement){
@@ -123,7 +133,6 @@ export class DataFor{
 		field_element.innerHTML = 'No Datasource found!';
 
 		element.appendChild(field_element);
-
 	}
 
 	public destroy(){

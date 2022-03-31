@@ -6,7 +6,20 @@
 
 
 	<body>
+		<div data-for
+  data-fields="gender;`-`;name.title;name.first;name.last"
+  data-request-url="https://randomuser.me/api/"
+  data-request-method="GET"
+  data-request-value="results"
+  ></div>
 
-		<script type="text/javascript" src="main.min.js"></script>
+		<div data-image data-src="https://wallpapercave.com/wp/6xVGpvY.png"></div>
+		<br>
+		<!--
+		<div data-video data-src=""></div>
+		-->
+		<br>
+		<div data-value="`Full Username: `;result[0].name.title;result[0].name.first;result[0].name.last" data-request-url="https://randomuser.me/api/" data-request-method="GET"></div>
+
 	</body>
 </html>

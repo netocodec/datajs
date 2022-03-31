@@ -48,7 +48,7 @@ module.exports = {
 			template:path.resolve(__dirname, 'index.html'),
 			minify:false,
 			cache:false,
-			inject:false,
+			inject:true,
 			title: 'DataJS Page Tester V1.0',
 			templateParameters:{}
 		})
