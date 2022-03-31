@@ -23,10 +23,6 @@ class DataJS {
 				element_class: data_element
 			});
 		}
-
-		setInterval(function(){
-			console.log(VDOM.dom_list);
-		}, 10000);
 	}
 
 
