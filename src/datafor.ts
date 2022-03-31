@@ -1,6 +1,33 @@
 import {Global} from './global';
 import {Network} from './net';
 
+/**
+ * Data For Class
+ *
+ * ```HTML
+ * 
+ * <TAGNAME data-for 
+ *		data-fields="FIELD_NAME;FIELD_NAME;`STRING_FIELD`;FIELD_NAME;..."
+ * 		data-request-url="URI"
+ * 		data-request-method="METHOD_TYPE"
+ * 		data-request-params='{ "FIELD_NAME": "FIELD_VALUE" }'
+ * 		data-request-refresh="TIME_IN_SECONDS"></TAGNAME>
+ * ```
+ *	data-for --> Required
+ *	data-fields --> Required
+ *	data-request-url --> Required
+ *	data-request-method --> Required
+ *	data-request-params --> Required only on POST method
+ *	data-request-refresh --> Optional
+ *
+ *
+	On data-request-params attribute if you want use the date in real time you can use this "time": "DATE_NOW"
+   and the DataJS will put on the request the current HOUR:MINUTE payload.
+ *
+ *	On data-fields you can explore the data structure object. For example "propertyname.insideproperty.array[0].valueproperty"
+ *	
+ *	For data-for work properly your request must return JSON structure
+ */
 export class DataFor{
 
 	private readonly FIELD_SEPARATOR:string = ";";

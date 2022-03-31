@@ -51,7 +51,7 @@ module.exports = {
 			inject:false,
 			title: 'DataJS Page Tester V1.0',
 			templateParameters:{}
-		}),
+		})
 	],
 	node:{
 		global:false
