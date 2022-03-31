@@ -20,6 +20,10 @@
 Everything you need even a request to show data in a page the DataJS can do it for you.
 
 
+#### Documentation
+
+[DataJS Documentation](https://netocodec.github.io/datajs/ "DataJS Documentation")
+
 #### Warning
 
 This project is new yet, it still needs some improvements.
