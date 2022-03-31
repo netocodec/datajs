@@ -1,3 +1,13 @@
+/**
+@class Network
+
+@param url{string}
+@param method{string}
+@param parameters{any}
+@param parse_params_to_json[boolean]
+
+This is the Network class. It is used for requests and similar.
+*/
 export class Network{
 
 	private url:string;
@@ -13,6 +23,12 @@ export class Network{
 	}
 
 
+	/**
+		@param success_callback{any}
+   		@param failed_callback{any}
+
+	   This function is to do the request of the given resource.
+	*/
 	public call(success_callback:any, failed_callback:any){
 		let xhr:XMLHttpRequest = new XMLHttpRequest();
 

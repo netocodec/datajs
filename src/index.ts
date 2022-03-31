@@ -5,8 +5,12 @@ declare global {
 	interface Window { DataJS: any; }
 }
 
-class DataJS {
+/**
+	@class DataJS
 
+   	DataJS main class.
+ */
+class DataJS {
 	constructor(){
 		console.log('DataJS v1.0.0');
 
@@ -26,6 +30,9 @@ class DataJS {
 	}
 
 
+	/**
+		Clears all the timers, VDOM and every element connected with the DataJS.
+	*/
 	public clear_datajs(){
 		console.log('Clear DataJS...');
 		VDOM.clear();
