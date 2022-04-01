@@ -1,4 +1,3 @@
-
 /**
  * Data Image Class - This is to show an image.
  *
