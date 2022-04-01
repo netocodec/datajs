@@ -13,14 +13,13 @@
   data-request-value="results"
   ></div>
 
-		<div data-image data-src="https://wallpapercave.com/wp/6xVGpvY.png"></div>
+		<div data-image="https://wallpapercave.com/wp/6xVGpvY.png"></div>
 		<br>
 		<!--
 		<div data-video data-src=""></div>
 		-->
 		<br>
-		<div data-value="`Full Username: `;result[0].name.title;result[0].name.first;result[0].name.last" data-request-url="https://randomuser.me/api/" data-request-method="GET"></div>
+		<div data-value="`Full Username: `;results[0].name.title;`. `;results[0].name.first;` `;results[0].name.last" data-request-url="https://randomuser.me/api/" data-request-method="GET"></div>
 
-		<script type="text/javascript" src="main.min.js"></script>
 	</body>
 </html>

@@ -1,7 +1,16 @@
+import {DataFor} from './datafor';
+import {DataValue} from './datavalue';
+import {DataImage} from './dataimage';
+
 type DOMItem ={
 	id:string
 	element:HTMLElement
 	element_class:any
+}
+
+export type DOMTagList = {
+	id:string
+	attr_name:string
 }
 
 /**
@@ -16,17 +25,35 @@ export class VDOM {
 	// Elements list
 	public static dom_list:DOMItem[] = [];
 
+	// Valid tag list
+	public static readonly VALID_VDOM_LIST:DOMTagList[] = [
+		{
+			id:'dfor',
+			attr_name:'[data-for]'
+		},
+		{
+			id:'dvalue',
+			attr_name:'[data-value]'
+		},
+		{
+			id:'dimage',
+			attr_name:'[data-image]'
+		}
+
+
+	];
+
 	/**
-	Function to add an element into the virtual DOM.
-	*/
+	  Function to add an element into the virtual DOM.
+	 */
 	public static add_element(element: DOMItem){
 		VDOM.dom_list.push(element);
 	}
 
 
 	/**
-	Clears outall the elements of the DOM and clears the virtual DOM list.
-	*/
+	  Clears outall the elements of the DOM and clears the virtual DOM list.
+	 */
 	public static clear(){
 		for(let c:number =0;c<VDOM.dom_list.length;c++){
 			VDOM.dom_list[c].element_class.destroy();
@@ -38,7 +65,7 @@ export class VDOM {
 
 	/**
 		Removes an element by his ID.
-	*/
+		*/
 	public static remove_element(id:string){
 		for(let c:number =0;c<VDOM.dom_list.length;c++){
 			let dom_i:DOMItem = VDOM.dom_list[c];
@@ -50,6 +77,27 @@ export class VDOM {
 				break;
 			}
 		}
+	}
+
+	// Gets the class of the choosen attr
+	public static get_class(id:string): any{
+		let result:any = null;
+
+		switch(id){
+			case 'dfor':
+				result = DataFor;
+			break;
+
+			case 'dvalue':
+				result = DataValue;
+			break;
+
+			case 'dimage':
+				result = DataImage;
+			break;
+		}
+
+		return result;
 	}
 }
 

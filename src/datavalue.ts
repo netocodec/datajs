@@ -34,7 +34,12 @@ import {Global} from './global';
  *	For data-value works properly withJSON structure
  */
 export class DataValue{
+
+	private element:HTMLElement;
+
 	constructor(element:HTMLElement) {
+		this.element = element;
+
 		let self:any = this;
 		let element_dataset:any = element.dataset;
 
@@ -51,9 +56,9 @@ export class DataValue{
 	}
 
 	public construct_result(element:HTMLElement, data_json:any, data_value:string){
-		element.innerHTML = Global.getStringProperty(data_json, data_value);
+		let obj:any = Global.createStringValue(data_value, data_json);
+		element.innerHTML = obj.result;
 	}
 
-	public destroy(){
-	}
+	public destroy(){}
 }
