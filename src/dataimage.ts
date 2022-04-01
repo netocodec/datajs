@@ -1,6 +1,6 @@
 
 /**
- * Data Image Class - This is to show the image.
+ * Data Image Class - This is to show an image.
  *
  * ```HTML
  * 
