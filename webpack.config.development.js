@@ -1,5 +1,7 @@
+const webpack = require("webpack");
 const path = require('path');
 const HtmlWebpackPlugin = require('./node_modules/html-webpack-plugin');
+const fs = require('fs');
 
 
 module.exports = {
@@ -32,8 +34,9 @@ module.exports = {
 		],
 	},
 	output: {
-		filename: 'main.js',
+		filename: 'main.[contenthash].js',
 		path: path.resolve(__dirname, 'dist'),
+		clean: true,
 	},
 	devServer: {
 		static: {
@@ -43,6 +46,7 @@ module.exports = {
 		port: 9000,
 	},
 	plugins: [
+		new webpack.BannerPlugin(fs.readFileSync('./LICENSE', 'utf8')),
 		new HtmlWebpackPlugin({
 			filename:'index.html',
 			template:path.resolve(__dirname, 'index.html'),

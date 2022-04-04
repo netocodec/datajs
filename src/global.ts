@@ -54,6 +54,14 @@ export class Global{
 		return result;
 	}
 
+	/**
+		@param string_pattern {string}
+		@param value_object {any}
+
+		@return FieldValueResult
+
+		Returns the string formatted with the values, this returns the variables names list and the fields value too.
+		*/
 	static createStringValue(string_pattern:string, value_object:any): FieldValueResult{
 		let result:FieldValueResult = {
 			result:'',
@@ -80,10 +88,24 @@ export class Global{
 		return result;
 	}
 
+	/**
+		@param string_pattern {string}
+
+		@return number
+
+		Gets the number of fields separated by semi-colon.
+		*/
 	static getFieldsLength(string_pattern:string): number{
 		return string_pattern.split(Global.FIELD_SEPARATOR).length;
 	}
 
+	/**
+		@param html_code {string}
+
+		@return string
+
+		Replace the "<" chars of the HTML code.
+		*/
 	static escapeHTMLCode(html_code:string): string{
 		return html_code.replace(Global.ESCAPE_HTML, '');
 	}

@@ -11,7 +11,7 @@ declare global {
  */
 class DataJS {
 	constructor(){
-		console.log('DataJS v1.0.0');
+		console.log('DataJS v1.0.1');
 
 		for(let property_id:number = 0;property_id<VDOM.VALID_VDOM_LIST.length;property_id++){
 			let tag:DOMTagList = VDOM.VALID_VDOM_LIST[property_id];

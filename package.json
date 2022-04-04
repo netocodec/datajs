@@ -1,13 +1,13 @@
 {
 	"name": "datajs",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "DataJS is a HTML dependency.",
 	"main": "index.js",
 	"scripts": {
 		"serve": "node ./local_server.js",
 		"build": "npx webpack build --config ./webpack.config.js --mode=production",
 		"build-dev": "npx webpack build --config ./webpack.config.development.js --mode=development && npm run serve",
-		"generate-doc":"rm -rf docs/ && npx typedoc --tsconfig ./tsconfig.json"
+		"generate-doc": "rm -rf docs/ && npx typedoc --tsconfig ./tsconfig.json"
 	},
 	"repository": {
 		"type": "git",

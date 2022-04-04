@@ -1,4 +1,6 @@
+const webpack = require("webpack");
 const path = require('path');
+const fs = require('fs');
 
 module.exports = {
 	"externals": {
@@ -30,9 +32,14 @@ module.exports = {
 		extensions: ['.tsx', '.ts', '.js'],
 	},
 	output: {
-		filename: 'main.min.js',
+		filename: 'main.[contenthash].min.js',
 		path: path.resolve(__dirname, 'dist'),
+		clean:true,
 	},
+	plugins: [
+		new webpack.BannerPlugin(fs.readFileSync('./LICENSE', 'utf8'))
+	],
+
 	node:{
 		global:false
 	},

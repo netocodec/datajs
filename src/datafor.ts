@@ -13,6 +13,7 @@ import {Network} from './net';
  * 		data-request-method="METHOD_TYPE"
  * 		data-request-params='{ "FIELD_NAME": "FIELD_VALUE" }'
  * 		data-request-refresh="TIME_IN_SECONDS"
+ * 		data-filter-top="NUMBER_OF_RESULTS_TO_SHOW"
  *		data-request-value="FIELD_NAME"></TAGNAME>
  * ```
  *	data-for --> Required
@@ -22,6 +23,7 @@ import {Network} from './net';
  *	data-request-params --> Required only on POST method
  *	data-request-refresh --> Optional
  *	data-request-value --> Optional
+ *	data-filter-top --> Optional
  *	data-escaped-fields --> Optional
  *
  *	The field "data-request-value" is used to tell the code where is the real result.
@@ -45,6 +47,7 @@ export class DataFor{
 
 	private refreshTimer:any = null;
 	private escapedFields:string[] = [];
+	private filterTop:number = -1;
 
 	constructor(element:HTMLElement) {
 		const self:any = this;
@@ -59,9 +62,14 @@ export class DataFor{
 		let requestRefresh:string = element_dataset.requestRefresh;
 		let requestValue:string = element_dataset.requestValue;
 		let url:string = element_dataset.requestUrl;
+		let filter_top:number = element_dataset.filterTop;
 
 		if(escaped_fields){
 			this.escapedFields = escaped_fields.split(Global.FIELD_SEPARATOR);
+		}
+
+		if(filter_top){
+			this.filterTop = filter_top;
 		}
 
 		if(url.indexOf(this.PROTOCOL) === -1){
@@ -92,7 +100,13 @@ export class DataFor{
 	}
 
 	public construct_result(element_tagname:string, data:any[], field:string, element:HTMLElement){
-		for(let data_id:number=0;data_id<data.length;data_id++){
+		let data_total:number = data.length;
+
+		if(this.filterTop !== -1){
+			data_total = this.filterTop;
+		}
+
+		for(let data_id:number=0;data_id<data_total;data_id++){
 			let data_item:object = data[data_id];
 			let data_sub_id:string = data_id.toString();
 			let fields:FieldValueResult = Global.createStringValue(field, data_item);

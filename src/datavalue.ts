@@ -7,6 +7,7 @@ import {Global} from './global';
  * ```HTML
  * 
  * <TAGNAME data-value="VALUE_FIELD" 
+ * 		data-escaped-fields
  * 		data-request-url="URI"
  * 		data-request-method="METHOD_TYPE"
  * 		data-request-params='{ "FIELD_NAME": "FIELD_VALUE" }'
