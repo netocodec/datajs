@@ -10,6 +10,8 @@
 - Virtual DOM
 - Value
 - FOR loop
+- Image
+- Video
 
 
 ------------
@@ -41,6 +43,9 @@ This libary does not require any other third-party libaries.
 		<div data-image="https://wallpapercave.com/wp/6xVGpvY.png"></div>
 
 		<br>
+		<div data-video="https://www.w3schools.com/html/mov_bbb.mp4" data-video-controls></div>
+
+		<br>
 		<div data-value="`Full Username: `;results[0].name.title;`. `;results[0].name.first;` `;results[0].name.last" data-request-url="https://randomuser.me/api/" data-request-method="GET">
 		</div>
 
@@ -64,5 +69,5 @@ This project is new yet, it still needs some improvements.
 
 ------------
 
-**File updated on: 01/04/2022**
+**File updated on: 04/04/2022**
 
