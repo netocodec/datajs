@@ -1,6 +1,7 @@
 import {DataFor} from './datafor';
 import {DataValue} from './datavalue';
 import {DataImage} from './dataimage';
+import {DataVideo} from './datavideo';
 
 type DOMItem ={
 	id:string
@@ -38,9 +39,11 @@ export class VDOM {
 		{
 			id:'dimage',
 			attr_name:'[data-image]'
+		},
+		{
+			id:'dvideo',
+			attr_name:'[data-video]'
 		}
-
-
 	];
 
 	/**
@@ -94,6 +97,10 @@ export class VDOM {
 
 			case 'dimage':
 				result = DataImage;
+			break;
+
+			case 'dvideo':
+				result = DataVideo;
 			break;
 		}
 
