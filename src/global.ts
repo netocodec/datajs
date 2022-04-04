@@ -1,6 +1,7 @@
 export type FieldValueResult = {
 	result:string
 	fields_list:string[]
+	fields_id_list:string[]
 };
 
 /**
@@ -11,8 +12,9 @@ This is the global class. It is used to create helpfull functions for the datase
 export class Global{
 
 
-	private static readonly FIELD_SEPARATOR:string = ";";
+	public static readonly FIELD_SEPARATOR:string = ";";
 	private static readonly RAW_FIELD:RegExp = /`/g;
+	private static readonly ESCAPE_HTML:RegExp = /(<\/{1})|(<{1})/gmi;
 	private static readonly RAW_FIELD_STR:string = "`";
 
 
@@ -55,7 +57,8 @@ export class Global{
 	static createStringValue(string_pattern:string, value_object:any): FieldValueResult{
 		let result:FieldValueResult = {
 			result:'',
-			fields_list:[]
+			fields_list:[],
+			fields_id_list:[]
 		};
 		let fields:string[] = string_pattern.split(Global.FIELD_SEPARATOR);
 
@@ -70,6 +73,7 @@ export class Global{
 			}
 
 			result.fields_list.push(field_result);
+			result.fields_id_list.push(field);
 			result.result += field_result;
 		}
 
@@ -78,5 +82,9 @@ export class Global{
 
 	static getFieldsLength(string_pattern:string): number{
 		return string_pattern.split(Global.FIELD_SEPARATOR).length;
+	}
+
+	static escapeHTMLCode(html_code:string): string{
+		return html_code.replace(Global.ESCAPE_HTML, '');
 	}
 }

@@ -8,6 +8,7 @@ import {Network} from './net';
  * 
  * <TAGNAME data-for 
  *		data-fields="FIELD_NAME;FIELD_NAME;`STRING_FIELD`;FIELD_NAME;..."
+ *		data-escaped-fields="FIELD_NAME;FIELD_NAME;FIELD_NAME;..."
  * 		data-request-url="URI"
  * 		data-request-method="METHOD_TYPE"
  * 		data-request-params='{ "FIELD_NAME": "FIELD_VALUE" }'
@@ -21,6 +22,7 @@ import {Network} from './net';
  *	data-request-params --> Required only on POST method
  *	data-request-refresh --> Optional
  *	data-request-value --> Optional
+ *	data-escaped-fields --> Optional
  *
  *	The field "data-request-value" is used to tell the code where is the real result.
  *
@@ -30,8 +32,7 @@ import {Network} from './net';
  *		But your result on HTML is : [object] Object.
  *		You use the attiribute "data-request-value='result'" and then you have the result in the HTML "helloworld123"
  *
- *	On data-request-params attribute if you want use the date in real time you can use this "time": "DATE_NOW"
- *  and the DataJS will put on the request the current HOUR:MINUTE payload.
+ *	On data-request-params attribute if you want use the date in real time you can use this "time": "DATE_NOW" and the DataJS will put on the request the current HOUR:MINUTE payload.
  *
  *	On data-fields you can explore the data structure object. For example "propertyname.insideproperty.array[0].valueproperty"
  *	
@@ -39,13 +40,11 @@ import {Network} from './net';
  */
 export class DataFor{
 
-	private readonly FIELD_SEPARATOR:string = ";";
-	private readonly RAW_FIELD:RegExp = /`/g;
-	private readonly RAW_FIELD_STR:string = "`";
 	private readonly PROTOCOL:string = "://";
 	private readonly SEARCH_ELEMENTS:string = '[data-for-subid][data-for-id]';
 
 	private refreshTimer:any = null;
+	private escapedFields:string[] = [];
 
 	constructor(element:HTMLElement) {
 		const self:any = this;
@@ -54,14 +53,19 @@ export class DataFor{
 		let element_dataset:any = element.dataset;
 
 		let fields:string = element_dataset.fields;
+		let escaped_fields:string = element_dataset.escapedFields;
 		let requestMethod:string = element_dataset.requestMethod;
 		let requestParams:string = element_dataset.requestParams;
 		let requestRefresh:string = element_dataset.requestRefresh;
 		let requestValue:string = element_dataset.requestValue;
 		let url:string = element_dataset.requestUrl;
 
+		if(escaped_fields){
+			this.escapedFields = escaped_fields.split(Global.FIELD_SEPARATOR);
+		}
+
 		if(url.indexOf(this.PROTOCOL) === -1){
-			self.construct_result(element_tagname, window[url], fields);
+			self.construct_result(element_tagname, window[url], fields, element);
 		}else{
 			let refresh:any = () => {
 				new Network(url, requestMethod, requestParams, true).call((_, data_json)=>{
@@ -96,6 +100,7 @@ export class DataFor{
 			for(let field_id:number=0;field_id<fields.fields_list.length;field_id++){
 				let field_element:HTMLElement = document.createElement(element_tagname);
 				let field:string = fields.fields_list[field_id];
+				let field_id_list_item:string = fields.fields_id_list[field_id];
 				let field_id_str:string = field_id.toString();
 				let query_string:string = '[data-for-subid="'+data_sub_id+'"][data-for-id="'+field_id_str+'"]';
 
@@ -103,6 +108,10 @@ export class DataFor{
 				field_element.dataset.forSubid = data_sub_id;
 				if(element.querySelector(query_string)){
 					field_element = element.querySelector(query_string);
+				}
+
+				if(this.escapedFields.indexOf(field_id_list_item) === -1){
+					field = Global.escapeHTMLCode(field);
 				}
 				field_element.innerHTML = field;
 

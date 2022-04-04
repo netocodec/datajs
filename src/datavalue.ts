@@ -17,6 +17,7 @@ import {Global} from './global';
  *	data-request-method --> Required
  *	data-request-params --> Required only on POST method
  *	data-request-value --> Optional
+ *	data-escaped-fields --> Optional
  *
  *	The field "data-request-value" is used to tell the code where is the real result.
  *
@@ -36,6 +37,7 @@ import {Global} from './global';
 export class DataValue{
 
 	private element:HTMLElement;
+	private escapedFields:boolean = false;
 
 	constructor(element:HTMLElement) {
 		this.element = element;
@@ -47,6 +49,9 @@ export class DataValue{
 		let requestMethod:string = element_dataset.requestMethod;
 		let requestParams:string = element_dataset.requestParams;
 		let data_value = element_dataset.value;
+		let escaped_fields:string = element_dataset.escapedFields;
+		
+		this.escapedFields = (escaped_fields !== undefined);
 
 		new Network(url, requestMethod, requestParams, true).call((_, data_json)=>{
 			self.construct_result(element, data_json, data_value);
@@ -57,6 +62,11 @@ export class DataValue{
 
 	public construct_result(element:HTMLElement, data_json:any, data_value:string){
 		let obj:any = Global.createStringValue(data_value, data_json);
+
+		if(!this.escapedFields){
+			obj.result = Global.escapeHTMLCode(obj.result);
+		}
+
 		element.innerHTML = obj.result;
 	}
 
