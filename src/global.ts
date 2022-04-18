@@ -124,8 +124,16 @@ export class Global{
 
 				if(field_item.indexOf(seperator)!==-1) {
 					let s_fields:string[] = field_item.split(seperator);
+
 					result = result.filter((item) => {
-						return Global.compareData(Global.getStringProperty(item, s_fields[0]), seperator, s_fields[1]);
+						let field_value:any =Global.getStringProperty(item, s_fields[0]);
+						let real_value:any = s_fields[1];
+
+						if(typeof(real_value) === 'string' && typeof(field_value) === 'number'){
+							real_value = parseInt(real_value);
+						}
+
+						return Global.compareData(field_value, seperator, real_value);
 					});
 				}
 			}

@@ -144,7 +144,7 @@ export class DataFor{
 					}
 
 					if(this.escapedFields.indexOf(field_id_list_item) === -1){
-						field = Global.escapeHTMLCode(field);
+						field = Global.escapeHTMLCode(field.toString());
 					}
 					field_element.innerHTML = field;
 
