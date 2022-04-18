@@ -8,7 +8,7 @@ export type FieldValueResult = {
 @class Global
 
 This is the global class. It is used to create helpfull functions for the dataset structures.
-*/
+ */
 export class Global{
 
 
@@ -16,26 +16,27 @@ export class Global{
 	private static readonly RAW_FIELD:RegExp = /`/g;
 	private static readonly ESCAPE_HTML:RegExp = /(<\/{1})|(<{1})/gmi;
 	private static readonly RAW_FIELD_STR:string = "`";
+	private static readonly OPERATORS_LIST:string[] = ['>', '<', '<=', '>=', '==', '!='];
 
 
 	/**
-		@param variable{any}
-	   	@param pattern{string}
+	  @param variable{any}
+	  @param pattern{string}
 
-	   This function will search for the property inside of an JSON object.
+	  This function will search for the property inside of an JSON object.
 
 	  For example:
 
-	 ```
-		let obj_json:any = { foo: "bar", hello: "world", this_is: "a test", obj_t:{ foo:"bar2" } };
-
-	   // This will return "a test" has an output.
-	   console.log(Global.getStringProperty(obj_json, 'this_is'));
-
-	  // This will return "bar2" has a string output.
-	   console.log(Global.getStringProperty(obj_json, 'obj_t.foo'));
 	  ```
-	*/
+	  let obj_json:any = { foo: "bar", hello: "world", this_is: "a test", obj_t:{ foo:"bar2" } };
+
+	// This will return "a test" has an output.
+	console.log(Global.getStringProperty(obj_json, 'this_is'));
+
+	// This will return "bar2" has a string output.
+	console.log(Global.getStringProperty(obj_json, 'obj_t.foo'));
+	```
+	 */
 	static getStringProperty(variable:any, pattern:string){
 		let result:any = variable;
 		let striped_pattern:string = pattern.replace(/\[(\w+)\]/g, '.$1').replace(/^\./, '');
@@ -56,11 +57,11 @@ export class Global{
 
 	/**
 		@param string_pattern {string}
-		@param value_object {any}
+	@param value_object {any}
 
-		@return FieldValueResult
+	@return FieldValueResult
 
-		Returns the string formatted with the values, this returns the variables names list and the fields value too.
+	Returns the string formatted with the values, this returns the variables names list and the fields value too.
 		*/
 	static createStringValue(string_pattern:string, value_object:any): FieldValueResult{
 		let result:FieldValueResult = {
@@ -91,9 +92,9 @@ export class Global{
 	/**
 		@param string_pattern {string}
 
-		@return number
+	@return number
 
-		Gets the number of fields separated by semi-colon.
+	Gets the number of fields separated by semi-colon.
 		*/
 	static getFieldsLength(string_pattern:string): number{
 		return string_pattern.split(Global.FIELD_SEPARATOR).length;
@@ -102,11 +103,69 @@ export class Global{
 	/**
 		@param html_code {string}
 
-		@return string
+	@return string
 
-		Replace the "<" chars of the HTML code.
+	Replace the "<" chars of the HTML code.
 		*/
 	static escapeHTMLCode(html_code:string): string{
 		return html_code.replace(Global.ESCAPE_HTML, '');
 	}
+
+
+	static filterData(data:any[], fields:string):any[]{
+		let fields_list:string[] = fields.split(Global.FIELD_SEPARATOR);
+		let result:any[] = data;
+
+		for(let c:number = 0;c<fields_list.length;c++){
+			let field_item:string = fields_list[c];
+
+			for(let x:number =0;x<Global.OPERATORS_LIST.length;x++){
+				let seperator:string = Global.OPERATORS_LIST[x];
+
+				if(field_item.indexOf(seperator)!==-1) {
+					let s_fields:string[] = field_item.split(seperator);
+					result = result.filter((item) => {
+						return Global.compareData(Global.getStringProperty(item, s_fields[0]), seperator, s_fields[1]);
+					});
+				}
+			}
+		}
+
+
+		return result;
+	}
+
+	static compareData(data:any, operator:string, value:any):boolean{
+		let result:boolean = false;
+
+		switch(operator){
+			case '>':
+				result = (data > value);
+			break;
+
+			case '<':
+				result = (data < value);
+			break;
+
+			case '>=':
+				result = (data >= value);
+			break;
+
+			case '<=':
+				result = (data <= value);
+			break;
+
+			case '==':
+				result = (data === value);
+			break;
+
+			case '!=':
+				result = (data !== value);
+			break;
+
+		}
+
+		return result;
+	}
 }
+

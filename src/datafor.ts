@@ -14,7 +14,9 @@ import {Network} from './net';
  * 		data-request-params='{ "FIELD_NAME": "FIELD_VALUE" }'
  * 		data-request-refresh="TIME_IN_SECONDS"
  * 		data-filter-top="NUMBER_OF_RESULTS_TO_SHOW"
- *		data-request-value="FIELD_NAME"></TAGNAME>
+ *		data-filter-fields="FIELD_NAME OPERATOR VALUE_NAME;FIELD_NAME OPERATOR VALUE_NAME;FIELD_NAME OPERATOR VALUE_NAME;..."
+ *		data-request-value="FIELD_NAME"
+ *		data-no-message="NO_MESSAGE_ERROR"></TAGNAME>
  * ```
  *	data-for --> Required
  *	data-fields --> Required
@@ -24,7 +26,9 @@ import {Network} from './net';
  *	data-request-refresh --> Optional
  *	data-request-value --> Optional
  *	data-filter-top --> Optional
+ *	data-filter-fields --> Optional
  *	data-escaped-fields --> Optional
+ *	data-no-message --> Optional
  *
  *	The field "data-request-value" is used to tell the code where is the real result.
  *
@@ -39,6 +43,8 @@ import {Network} from './net';
  *	On data-fields you can explore the data structure object. For example "propertyname.insideproperty.array[0].valueproperty"
  *	
  *	For data-for work properly your request must return JSON structure
+ *	For data-filter-fields you can use comparation operators like this structure: data-filter-fields="gender==female;cell==95106057"
+ *	Becareful doing the filters because it is very restrict about the rules you put. It does not allow spaces between the OPERATOR and the FIELD and VALUE, only the left side uses variable type and the right side operator uses value type.
  */
 export class DataFor{
 
@@ -48,6 +54,7 @@ export class DataFor{
 	private refreshTimer:any = null;
 	private escapedFields:string[] = [];
 	private filterTop:number = -1;
+	private noMessage:string;
 
 	constructor(element:HTMLElement) {
 		const self:any = this;
@@ -63,6 +70,8 @@ export class DataFor{
 		let requestValue:string = element_dataset.requestValue;
 		let url:string = element_dataset.requestUrl;
 		let filter_top:number = element_dataset.filterTop;
+		let no_message:string = element_dataset.noMessage;
+ 		let filterFields:string = element_dataset.filterFields;
 
 		if(escaped_fields){
 			this.escapedFields = escaped_fields.split(Global.FIELD_SEPARATOR);
@@ -70,6 +79,10 @@ export class DataFor{
 
 		if(filter_top){
 			this.filterTop = filter_top;
+		}
+
+		if(no_message){
+			this.noMessage = no_message;
 		}
 
 		if(url.indexOf(this.PROTOCOL) === -1){
@@ -81,6 +94,10 @@ export class DataFor{
 
 					if(requestValue){
 						request_result = Global.getStringProperty(data_json, requestValue);
+					}
+
+					if(filterFields){
+						request_result = Global.filterData(request_result, filterFields);
 					}
 
 					self.construct_result(element_tagname, request_result, fields, element);
@@ -108,32 +125,50 @@ export class DataFor{
 
 		for(let data_id:number=0;data_id<data_total;data_id++){
 			let data_item:object = data[data_id];
-			let data_sub_id:string = data_id.toString();
-			let fields:FieldValueResult = Global.createStringValue(field, data_item);
 
-			for(let field_id:number=0;field_id<fields.fields_list.length;field_id++){
-				let field_element:HTMLElement = document.createElement(element_tagname);
-				let field:string = fields.fields_list[field_id];
-				let field_id_list_item:string = fields.fields_id_list[field_id];
-				let field_id_str:string = field_id.toString();
-				let query_string:string = '[data-for-subid="'+data_sub_id+'"][data-for-id="'+field_id_str+'"]';
+			if(data_item){
+				let data_sub_id:string = data_id.toString();
+				let fields:FieldValueResult = Global.createStringValue(field, data_item);
 
-				field_element.dataset.forId = field_id_str;
-				field_element.dataset.forSubid = data_sub_id;
-				if(element.querySelector(query_string)){
-					field_element = element.querySelector(query_string);
-				}
+				for(let field_id:number=0;field_id<fields.fields_list.length;field_id++){
+					let field_element:HTMLElement = document.createElement(element_tagname);
+					let field:string = fields.fields_list[field_id];
+					let field_id_list_item:string = fields.fields_id_list[field_id];
+					let field_id_str:string = field_id.toString();
+					let query_string:string = '[data-for-subid="'+data_sub_id+'"][data-for-id="'+field_id_str+'"]';
 
-				if(this.escapedFields.indexOf(field_id_list_item) === -1){
-					field = Global.escapeHTMLCode(field);
-				}
-				field_element.innerHTML = field;
+					field_element.dataset.forId = field_id_str;
+					field_element.dataset.forSubid = data_sub_id;
+					if(element.querySelector(query_string)){
+						field_element = element.querySelector(query_string);
+					}
 
-				element.appendChild(field_element);
+					if(this.escapedFields.indexOf(field_id_list_item) === -1){
+						field = Global.escapeHTMLCode(field);
+					}
+					field_element.innerHTML = field;
+
+					element.appendChild(field_element);
+				}		
 			}
 		}
-
 		this.clean_up_unwanted_result(data.length, Global.getFieldsLength(field), element);
+
+		if(data_total===0 && this.noMessage){
+			let field_element:HTMLElement = document.createElement(element_tagname);
+			let query_string:string = '[data-for-subid="0"][data-for-id="0"]';
+
+			field_element.dataset.forId = '0';
+			field_element.dataset.forSubid = '0';
+
+
+			if(element.querySelector(query_string)){
+				field_element = element.querySelector(query_string);
+			}
+			field_element.innerHTML = Global.escapeHTMLCode(this.noMessage);
+
+			element.appendChild(field_element);
+		}
 	}
 
 	public clean_up_unwanted_result(total_data:number, total_fields:number, element:HTMLElement){
