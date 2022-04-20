@@ -2,6 +2,7 @@ import {DataFor} from './datafor';
 import {DataValue} from './datavalue';
 import {DataImage} from './dataimage';
 import {DataVideo} from './datavideo';
+import {DataRedirect} from './dataredirect';
 
 type DOMItem ={
 	id:string
@@ -43,7 +44,12 @@ export class VDOM {
 		{
 			id:'dvideo',
 			attr_name:'[data-video]'
+		},
+		{
+			id:'dredirect',
+			attr_name:'[data-redirect]'
 		}
+
 	];
 
 	/**
@@ -101,6 +107,10 @@ export class VDOM {
 
 			case 'dvideo':
 				result = DataVideo;
+			break;
+
+			case 'dredirect':
+				result = DataRedirect;
 			break;
 		}
 

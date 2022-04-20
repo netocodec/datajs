@@ -43,6 +43,6 @@ module.exports = {
 	node:{
 		global:false
 	},
-	target: 'web'
+	target: ['web', 'es5']
 };
 
