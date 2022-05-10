@@ -131,6 +131,8 @@ export class Global{
 
 						if(typeof(real_value) === 'string' && typeof(field_value) === 'number'){
 							real_value = parseInt(real_value);
+						}else if (typeof(field_value) === 'boolean'){
+							real_value = (real_value === 'true');
 						}
 
 						return Global.compareData(field_value, seperator, real_value);
