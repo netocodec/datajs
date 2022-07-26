@@ -128,8 +128,9 @@ export class Global{
 
 		for(let c:number=0;c<style_arr.length;c++){
 			let s_value:string = style_arr[c];
-			let style_arr_key:string[] = s_value.split(Global.DDOT_CHAR);
-			let style_prop:string = style_arr_key[1];
+
+			let style_arr:string[] = s_value.split(Global.DDOT_CHAR);
+			let style_prop:string = style_arr[1];
 
 			if(style_prop.length !== 0){
 				style_prop = style_prop.substring(0, style_prop.length-1);					
@@ -144,7 +145,7 @@ export class Global{
 					prop_value = Global.createStringValue(style_prop, data);	
 				}
 
-				result += `${style_arr_key[0]}:${prop_value.result};`;
+				result += `${style_arr[0]}:${prop_value.result};`;
 			}
 		}
 

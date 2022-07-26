@@ -117,7 +117,7 @@ export class DataFor{
 	}
 
 	public construct_result(element_tagname:string, data:any[], field:string, element:HTMLElement){
-		let data_total:number = data.length;
+		let data_total:number = data.length;	
 
 		if(this.filterTop !== -1){
 			data_total = this.filterTop;
@@ -129,6 +129,11 @@ export class DataFor{
 			if(data_item){
 				let data_sub_id:string = data_id.toString();
 				let fields:FieldValueResult = Global.createStringValue(field, data_item);
+				let element_style:string = '';
+
+				if(element.dataset.style){
+					element_style = Global.applyStyle(element.dataset.style, data_item);
+				}
 
 				for(let field_id:number=0;field_id<fields.fields_list.length;field_id++){
 					let field_element:HTMLElement = document.createElement(element_tagname);
@@ -146,6 +151,11 @@ export class DataFor{
 					if(this.escapedFields.indexOf(field_id_list_item) === -1){
 						field = Global.escapeHTMLCode(field.toString());
 					}
+
+					if(element_style !== ''){
+						field_element.setAttribute('style', element_style);
+					}
+
 					field_element.innerHTML = field;
 
 					element.appendChild(field_element);
