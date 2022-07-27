@@ -15,6 +15,7 @@ import {Network} from './net';
  * 		data-request-refresh="TIME_IN_SECONDS"
  * 		data-filter-top="NUMBER_OF_RESULTS_TO_SHOW"
  *		data-filter-fields="FIELD_NAME OPERATOR VALUE_NAME;FIELD_NAME OPERATOR VALUE_NAME;FIELD_NAME OPERATOR VALUE_NAME;..."
+ *		data-style="PROPERTY_NAME:FIELD_NAME; PROPERTY_NAME:`STRING_FIELD`;FIELD_NAME;PROPERTY_NAME: `STRING_FIELD`;..."
  *		data-request-value="FIELD_NAME"
  *		data-no-message="NO_MESSAGE_ERROR"></TAGNAME>
  * ```
@@ -24,6 +25,7 @@ import {Network} from './net';
  *	data-request-method --> Required
  *	data-request-params --> Required only on POST method
  *	data-request-refresh --> Optional
+ *	data-style --> Optional
  *	data-request-value --> Optional
  *	data-filter-top --> Optional
  *	data-filter-fields --> Optional
